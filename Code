@@ -1,0 +1,90 @@
+from tkinter import *
+from tkinter import messagebox
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+
+
+
+
+win = Tk()
+win.title("My notepad")
+win.rowconfigure(0, minsize=800, weight=1)
+win.columnconfigure(1, minsize=800, weight=1)
+
+
+def open_file():
+    filepath= askopenfilename[("Text Files", "*.text"),("All files","*.*")]
+    if not filepath:
+        return
+    txt.delete(1.0,END)
+    with open (filepath,"r") as input_file:
+        text = input_file.read()
+        txt.insert(END,text)
+        win.title(f"Simple Text Editor - {filepath}")
+
+
+
+def save_file():
+    filepath= asksaveasfilename(defaultextension="docx",filetypes=[("Text Files", "*.text"),("All files","*.*")])
+    if not filepath:
+        return
+    with open (filepath,"w") as output_file:
+        text = txt.get(1.0,END)
+        output_file.write(text)
+        win.title(f"Simple Text Editor - {filepath}")
+
+
+
+def new():
+    txt.delete(1.0,END)
+
+
+def darkmode():
+    if dm.get()==1:#an einai on to darkmode
+        txt. configure(background="white", foreground="black")
+    elif dm.get()==0:#an einai off to dark mode
+        txt. configure(background="black", foreground="white")
+
+
+
+def about():
+    messagebox.showinfo('Help',"Google it dumbass")
+
+
+
+
+
+
+
+menubar=Menu(win) #ftiaxnv xoro gia to menu 
+file=Menu(menubar,tearoff=0)# to topoueto sto menu bar
+file.add_command(label="New",command=new) 
+file.add_command(label="Open", command=open_file) 
+file.add_command(label="Save as......", command=save_file) 
+file.add_command(label="Exit",command=win.quit)
+menubar.add_cascade(label="File",menu=file)
+ 
+dm=BooleanVar()
+dm.set(False)
+ 
+ 
+View=Menu(menubar)# to topoueto sto menu bar
+View.add_checkbutton(label="DarkMode", onvalue=1,offvalue=0, variable=dm, command=darkmode) 
+menubar.add_cascade(label="View",menu=View)
+
+
+
+About=Menu(menubar)# to topoueto sto menu bar
+About.add_command(label="Help",command=about) 
+menubar.add_cascade(label="About",menu=About)
+
+
+
+txt= Text(win)
+txt.grid(row=0, column=0, sticky="nsew")
+
+
+
+
+
+win.configure(menu=menubar)
+win.mainloop()
